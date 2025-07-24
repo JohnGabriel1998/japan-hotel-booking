@@ -14,6 +14,26 @@ export const mockReviews: Review[] = [
     stayDate: '2024-01-15',
     createdAt: '2024-01-18T10:30:00Z',
     helpful: 12,
+    photos: [
+      {
+        id: 'photo_1_1',
+        url: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop',
+        caption: 'Beautiful room with garden view',
+        uploadedAt: '2024-01-18T10:30:00Z'
+      },
+      {
+        id: 'photo_1_2',
+        url: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop',
+        caption: 'Traditional Japanese breakfast',
+        uploadedAt: '2024-01-18T10:30:00Z'
+      },
+      {
+        id: 'photo_1_3',
+        url: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=600&fit=crop',
+        caption: 'Stunning lobby area',
+        uploadedAt: '2024-01-18T10:30:00Z'
+      }
+    ],
     categories: {
       cleanliness: 5,
       service: 5,
@@ -56,6 +76,20 @@ export const mockReviews: Review[] = [
     stayDate: '2024-01-08',
     createdAt: '2024-01-10T09:15:00Z',
     helpful: 15,
+    photos: [
+      {
+        id: 'photo_3_1',
+        url: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&h=600&fit=crop',
+        caption: 'Relaxing spa treatment room',
+        uploadedAt: '2024-01-10T09:15:00Z'
+      },
+      {
+        id: 'photo_3_2',
+        url: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&h=600&fit=crop',
+        caption: 'Hotel exterior at night',
+        uploadedAt: '2024-01-10T09:15:00Z'
+      }
+    ],
     categories: {
       cleanliness: 5,
       service: 5,

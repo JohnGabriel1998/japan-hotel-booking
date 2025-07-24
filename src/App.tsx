@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Heart, Receipt, Search, Home } from '@phosphor-icons/react';
+import { Heart, Receipt, MagnifyingGlass, House } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/sonner';
 import { SearchBar } from './components/SearchBar';
@@ -35,12 +35,14 @@ function App() {
 
   // Initialize with mock reviews if none exist
   useEffect(() => {
-    if (reviews.length === 0) {
+    if (reviews && reviews.length === 0) {
       setReviews(mockReviews);
     }
-  }, [reviews.length, setReviews]);
+  }, [reviews, setReviews]);
 
   const filteredHotels = useMemo(() => {
+    if (!searchFilters) return mockHotels;
+    
     return mockHotels.filter(hotel => {
       if (searchFilters.location && !hotel.location.toLowerCase().includes(searchFilters.location.toLowerCase())) {
         return false;
@@ -84,7 +86,7 @@ function App() {
   };
 
   const navigation = [
-    { id: 'home', label: 'Hotels', icon: Home },
+    { id: 'home', label: 'Hotels', icon: House },
     { id: 'favorites', label: 'Favorites', icon: Heart },
     { id: 'bookings', label: 'Bookings', icon: Receipt }
   ];
@@ -108,13 +110,20 @@ function App() {
             </div>
 
             <div className="mb-8">
-              <SearchBar onSearch={handleSearch} filters={searchFilters} />
+              <SearchBar onSearch={handleSearch} filters={searchFilters || {
+                location: '',
+                checkIn: '',
+                checkOut: '',
+                guests: 2,
+                priceRange: [0, 200000],
+                amenities: []
+              }} />
             </div>
 
             <div className="mb-6">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-semibold">
-                  {searchFilters.location ? `Hotels in ${searchFilters.location}` : 'Featured Hotels'}
+                  {searchFilters?.location ? `Hotels in ${searchFilters.location}` : 'Featured Hotels'}
                 </h2>
                 <span className="text-muted-foreground">
                   {filteredHotels.length} hotel{filteredHotels.length !== 1 ? 's' : ''} found
@@ -124,7 +133,7 @@ function App() {
 
             {filteredHotels.length === 0 ? (
               <div className="text-center py-12">
-                <Search size={64} className="text-muted-foreground mx-auto mb-4" />
+                <MagnifyingGlass size={64} className="text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-2">No hotels found</h3>
                 <p className="text-muted-foreground">
                   Try adjusting your search criteria or explore different destinations.
@@ -197,9 +206,9 @@ function App() {
         room={selectedRoom}
         isOpen={isBookingOpen}
         onClose={handleCloseBooking}
-        checkIn={searchFilters.checkIn}
-        checkOut={searchFilters.checkOut}
-        guests={searchFilters.guests}
+        checkIn={searchFilters?.checkIn || ''}
+        checkOut={searchFilters?.checkOut || ''}
+        guests={searchFilters?.guests || 2}
       />
 
       <Toaster />

@@ -33,6 +33,19 @@ A sophisticated hotel booking platform showcasing premium accommodations across 
 - **Progression**: Room selection → Guest details → Payment info → Confirmation → Booking history
 - **Success criteria**: Users can complete bookings and access confirmation details
 
+### Reviews & Ratings System
+- **Functionality**: Multi-category rating system with detailed written reviews and photo uploads
+- **Purpose**: Enable guests to share experiences and help future travelers make informed decisions
+- **Trigger**: User completes stay and clicks "Write Review" or accesses review form from hotel details
+- **Progression**: Review form → Category ratings → Written review → Photo upload → Submission → Display in hotel reviews
+- **Success criteria**: Users can easily submit comprehensive reviews with photos and browse authentic guest feedback
+- **Photo Upload Features**:
+  - Support up to 5 photos per review with 5MB limit per image
+  - Base64 encoding for storage with caption support
+  - Responsive photo gallery with lightbox viewing
+  - Drag & drop or click to upload interface
+  - Real-time preview with caption editing
+
 ### Favorites System
 - **Functionality**: Save preferred hotels for easy access and comparison
 - **Purpose**: Allow users to curate and revisit hotels of interest

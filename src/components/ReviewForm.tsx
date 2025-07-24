@@ -6,7 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
-import { Review, Hotel } from '../types/hotel';
+import { PhotoUpload } from './PhotoUpload';
+import { Review, Hotel, ReviewPhoto } from '../types/hotel';
 import { useKV } from '@github/spark/hooks';
 import { toast } from 'sonner';
 
@@ -32,6 +33,7 @@ export function ReviewForm({ hotel, isOpen, onClose, onReviewSubmitted }: Review
     value: 0,
     amenities: 0
   });
+  const [photos, setPhotos] = useState<ReviewPhoto[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleCategoryRating = (category: string, value: number) => {
@@ -57,14 +59,14 @@ export function ReviewForm({ hotel, isOpen, onClose, onReviewSubmitted }: Review
 
     try {
       // Get current user info
-      const user = await spark.user();
+      const user = await window.spark.user();
       
       const newReview: Review = {
         id: `review_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         hotelId: hotel.id,
-        userId: user.id,
-        userName: user.login || 'Guest User',
-        userAvatar: user.avatarUrl,
+        userId: user?.id || 'anonymous',
+        userName: user?.login || 'Guest User',
+        userAvatar: user?.avatarUrl,
         rating,
         title: title.trim(),
         comment: comment.trim(),
@@ -72,10 +74,11 @@ export function ReviewForm({ hotel, isOpen, onClose, onReviewSubmitted }: Review
         stayDate,
         createdAt: new Date().toISOString(),
         helpful: 0,
+        photos: photos.length > 0 ? photos : undefined,
         categories
       };
 
-      setReviews(currentReviews => [newReview, ...currentReviews]);
+      setReviews(currentReviews => [newReview, ...(currentReviews || [])]);
       
       toast.success('Review submitted successfully!');
       
@@ -85,6 +88,7 @@ export function ReviewForm({ hotel, isOpen, onClose, onReviewSubmitted }: Review
       setComment('');
       setRoomType('');
       setStayDate('');
+      setPhotos([]);
       setCategories({
         cleanliness: 0,
         service: 0,
@@ -249,6 +253,14 @@ export function ReviewForm({ hotel, isOpen, onClose, onReviewSubmitted }: Review
               />
             </div>
           </div>
+
+          {/* Photo Upload */}
+          <PhotoUpload
+            photos={photos}
+            onPhotosChange={setPhotos}
+            maxPhotos={5}
+            className="border-t pt-6"
+          />
 
           {/* Submit Button */}
           <div className="flex justify-end gap-3 pt-4 border-t">

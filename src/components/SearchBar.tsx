@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Calendar, Users, MapPin } from '@phosphor-icons/react';
+import { MagnifyingGlass, Calendar, Users, MapPin } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -92,7 +92,7 @@ export function SearchBar({ onSearch, filters }: SearchBarProps) {
           className="px-8 py-2 bg-primary hover:bg-primary/90 text-primary-foreground"
           size="lg"
         >
-          <Search size={18} className="mr-2" />
+          <MagnifyingGlass size={18} className="mr-2" />
           Search Hotels
         </Button>
       </div>

@@ -69,6 +69,7 @@ export interface Review {
   stayDate: string;
   createdAt: string;
   helpful: number;
+  photos?: ReviewPhoto[];
   categories: {
     cleanliness: number;
     service: number;
@@ -76,4 +77,11 @@ export interface Review {
     value: number;
     amenities: number;
   };
+}
+
+export interface ReviewPhoto {
+  id: string;
+  url: string;
+  caption?: string;
+  uploadedAt: string;
 }

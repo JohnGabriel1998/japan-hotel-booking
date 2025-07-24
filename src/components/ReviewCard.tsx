@@ -2,6 +2,7 @@ import React from 'react';
 import { Star, ThumbsUp } from '@phosphor-icons/react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { PhotoGallery } from './PhotoGallery';
 import { Review } from '../types/hotel';
 
 interface ReviewCardProps {
@@ -83,6 +84,13 @@ export function ReviewCard({ review, onHelpful }: ReviewCardProps) {
             </div>
           )}
         </div>
+
+        {/* Photos */}
+        {review.photos && review.photos.length > 0 && (
+          <div className="mb-4">
+            <PhotoGallery photos={review.photos} className="rounded-lg overflow-hidden" />
+          </div>
+        )}
 
         {/* Category Ratings */}
         <div className="mb-4 border-t pt-4">

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Star, Plus, SortAscending, Filter } from '@phosphor-icons/react';
+import { Star, Plus, SortAscending, Funnel } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ReviewCard } from './ReviewCard';
@@ -225,7 +225,7 @@ export function ReviewsSection({ hotel }: ReviewsSectionProps) {
             </div>
 
             <div className="flex items-center gap-2">
-              <Filter size={18} className="text-muted-foreground" />
+              <Funnel size={18} className="text-muted-foreground" />
               <Select value={filterBy} onValueChange={(value: FilterOption) => setFilterBy(value)}>
                 <SelectTrigger className="w-32">
                   <SelectValue />

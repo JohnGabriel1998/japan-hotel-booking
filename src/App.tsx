@@ -1,5 +1,200 @@
+import React, { useState, useMemo } from 'react';
+import { Heart, Receipt, Search, Home } from '@phosphor-icons/react';
+import { Button } from '@/components/ui/button';
+import { Toaster } from '@/components/ui/sonner';
+import { SearchBar } from './components/SearchBar';
+import { HotelCard } from './components/HotelCard';
+import { HotelDetails } from './components/HotelDetails';
+import { BookingModal } from './components/BookingModal';
+import { FavoritesPage } from './components/FavoritesPage';
+import { BookingsPage } from './components/BookingsPage';
+import { mockHotels } from './data/hotels';
+import { Hotel, Room, SearchFilters } from './types/hotel';
+import { useKV } from '@github/spark/hooks';
+
+type Page = 'home' | 'favorites' | 'bookings';
+
 function App() {
-    return <div></div>
+  const [currentPage, setCurrentPage] = useState<Page>('home');
+  const [selectedHotel, setSelectedHotel] = useState<Hotel | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  
+  const [searchFilters, setSearchFilters] = useKV<SearchFilters>('search-filters', {
+    location: '',
+    checkIn: '',
+    checkOut: '',
+    guests: 2,
+    priceRange: [0, 200000],
+    amenities: []
+  });
+
+  const filteredHotels = useMemo(() => {
+    return mockHotels.filter(hotel => {
+      if (searchFilters.location && !hotel.location.toLowerCase().includes(searchFilters.location.toLowerCase())) {
+        return false;
+      }
+      
+      if (searchFilters.guests > 0) {
+        const hasCapacity = hotel.rooms.some(room => room.capacity >= searchFilters.guests);
+        if (!hasCapacity) return false;
+      }
+      
+      const hotelMinPrice = hotel.priceRange.min;
+      if (hotelMinPrice < searchFilters.priceRange[0] || hotelMinPrice > searchFilters.priceRange[1]) {
+        return false;
+      }
+      
+      return true;
+    });
+  }, [searchFilters]);
+
+  const handleSearch = (filters: SearchFilters) => {
+    setSearchFilters(filters);
+    setCurrentPage('home');
+  };
+
+  const handleViewDetails = (hotel: Hotel) => {
+    setSelectedHotel(hotel);
+    setIsDetailsOpen(true);
+  };
+
+  const handleBookRoom = (hotel: Hotel, room: Room) => {
+    setSelectedHotel(hotel);
+    setSelectedRoom(room);
+    setIsDetailsOpen(false);
+    setIsBookingOpen(true);
+  };
+
+  const handleCloseBooking = () => {
+    setIsBookingOpen(false);
+    setSelectedHotel(null);
+    setSelectedRoom(null);
+  };
+
+  const navigation = [
+    { id: 'home', label: 'Hotels', icon: Home },
+    { id: 'favorites', label: 'Favorites', icon: Heart },
+    { id: 'bookings', label: 'Bookings', icon: Receipt }
+  ];
+
+  const renderContent = () => {
+    switch (currentPage) {
+      case 'favorites':
+        return <FavoritesPage onViewHotel={handleViewDetails} />;
+      case 'bookings':
+        return <BookingsPage />;
+      default:
+        return (
+          <div className="max-w-6xl mx-auto px-4 py-8">
+            <div className="text-center mb-12">
+              <h1 className="text-4xl font-bold text-foreground mb-4">
+                Discover Premium Hotels in Japan
+              </h1>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Experience authentic Japanese hospitality at carefully curated luxury accommodations
+              </p>
+            </div>
+
+            <div className="mb-8">
+              <SearchBar onSearch={handleSearch} filters={searchFilters} />
+            </div>
+
+            <div className="mb-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-semibold">
+                  {searchFilters.location ? `Hotels in ${searchFilters.location}` : 'Featured Hotels'}
+                </h2>
+                <span className="text-muted-foreground">
+                  {filteredHotels.length} hotel{filteredHotels.length !== 1 ? 's' : ''} found
+                </span>
+              </div>
+            </div>
+
+            {filteredHotels.length === 0 ? (
+              <div className="text-center py-12">
+                <Search size={64} className="text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-2">No hotels found</h3>
+                <p className="text-muted-foreground">
+                  Try adjusting your search criteria or explore different destinations.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredHotels.map((hotel) => (
+                  <HotelCard
+                    key={hotel.id}
+                    hotel={hotel}
+                    onViewDetails={handleViewDetails}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b bg-white/95 backdrop-blur-sm sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-sm">S</span>
+              </div>
+              <h1 className="text-xl font-bold text-foreground">Sakura Stay</h1>
+            </div>
+
+            <nav className="flex items-center gap-2">
+              {navigation.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Button
+                    key={item.id}
+                    variant={currentPage === item.id ? 'default' : 'ghost'}
+                    onClick={() => setCurrentPage(item.id as Page)}
+                    className="flex items-center gap-2"
+                  >
+                    <Icon size={18} />
+                    <span className="hidden sm:inline">{item.label}</span>
+                  </Button>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="pb-8">
+        {renderContent()}
+      </main>
+
+      {/* Dialogs */}
+      <HotelDetails
+        hotel={selectedHotel}
+        isOpen={isDetailsOpen}
+        onClose={() => setIsDetailsOpen(false)}
+        onBookRoom={handleBookRoom}
+      />
+
+      <BookingModal
+        hotel={selectedHotel}
+        room={selectedRoom}
+        isOpen={isBookingOpen}
+        onClose={handleCloseBooking}
+        checkIn={searchFilters.checkIn}
+        checkOut={searchFilters.checkOut}
+        guests={searchFilters.guests}
+      />
+
+      <Toaster />
+    </div>
+  );
 }
 
-export default App
+export default App;

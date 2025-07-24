@@ -1,35 +1,35 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Heart, Receipt, MagnifyingGlass, House, Translate } from '@phosphor-icons/react';
-import { Button } from '@/components/ui/button';
-import { Toaster } from '@/components/ui/sonner';
+import { SearchBar } from './components/SearchBa
+import { HotelDetails } from './components/HotelD
 import { SearchBar } from './components/SearchBar';
 import { HotelCard } from './components/HotelCard';
 import { HotelDetails } from './components/HotelDetails';
 import { BookingModal } from './components/BookingModal';
 import { FavoritesPage } from './components/FavoritesPage';
 import { BookingsPage } from './components/BookingsPage';
-import { mockHotels } from './data/hotels';
+  const [currentPage, setCurrentPage] = use
 import { mockReviews } from './data/reviews';
 import { Hotel, Room, SearchFilters, Review } from './types/hotel';
 import { useKV } from '@github/spark/hooks';
-import { useTranslation } from './hooks/useTranslation';
-
-type Page = 'home' | 'favorites' | 'bookings';
-
-function App() {
-  const { t, currentLanguage, toggleLanguage } = useTranslation();
-  const [currentPage, setCurrentPage] = useState<Page>('home');
-  const [selectedHotel, setSelectedHotel] = useState<Hotel | null>(null);
-  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
-  
-  const [searchFilters, setSearchFilters] = useKV<SearchFilters>('search-filters', {
-    location: '',
     checkIn: '',
-    checkOut: '',
-    guests: 2,
-    priceRange: [0, 200000],
+
+    amenities: []
+
+
+  useEffect(() => {
+      setReviews(mockReviews);
+  }, [reviews, setReviews]);
+  const filteredHotels = useMemo(() => {
+    
+      if (searchFilters.location && !hotel.location.toLowerC
+  
+      if (searchFilters.guests > 0) {
+        if (!hasC
+    checkIn: '',
+      if (hotelMi
+      }
+      return true;
     amenities: []
   });
 
@@ -62,70 +62,70 @@ function App() {
       
       return true;
     });
-  }, [searchFilters]);
+                </h2>
 
-  const handleSearch = (filters: SearchFilters) => {
-    setSearchFilters(filters);
-    setCurrentPage('home');
-  };
+              </div>
 
-  const handleViewDetails = (hotel: Hotel) => {
-    setSelectedHotel(hotel);
-    setIsDetailsOpen(true);
-  };
+              <div classNam
+    
 
-  const handleBookRoom = (hotel: Hotel, room: Room) => {
-    setSelectedHotel(hotel);
-    setSelectedRoom(room);
-    setIsDetailsOpen(false);
-    setIsBookingOpen(true);
-  };
+              </div>
+              <div className
+                  <HotelCar
+    
 
-  const handleCloseBooking = () => {
-    setIsBookingOpen(false);
-    setSelectedHotel(null);
-    setSelectedRoom(null);
-  };
+              </div>
+          </div>
+    }
 
-  const navigation = [
-    { id: 'home', label: t('hotels'), icon: House },
-    { id: 'favorites', label: t('favorites'), icon: Heart },
-    { id: 'bookings', label: t('bookings'), icon: Receipt }
-  ];
+    <div className="min-h-s
+    
 
-  const renderContent = () => {
-    switch (currentPage) {
-      case 'favorites':
-        return <FavoritesPage onViewHotel={handleViewDetails} />;
-      case 'bookings':
-        return <BookingsPage />;
-      default:
-        return (
-          <div className="max-w-6xl mx-auto px-4 py-8">
-            <div className="text-center mb-12">
-              <h1 className="text-4xl font-bold text-foreground mb-4">
-                {t('heroTitle')}
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                {t('heroSubtitle')}
-              </p>
+              <div className="w-8 h-
+              </div>
             </div>
+            <nav className
+    
 
-            <div className="mb-8">
-              <SearchBar onSearch={handleSearch} filters={searchFilters || {
-                location: '',
-                checkIn: '',
-                checkOut: '',
-                guests: 2,
-                priceRange: [0, 200000],
-                amenities: []
-              }} />
-            </div>
+                    va
+                    className="flex items-center gap
+                    <Icon size={18} />
+                  </Button>
+    
 
-            <div className="mb-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-semibold">
-                  {searchFilters?.location ? `${t('hotels')} in ${searchFilters.location}` : t('featuredHotels')}
+                onClick={toggle
+                title={t('
+                <Transl
+                  {currentLanguage === 'en' ? t('japanese') : t('
+              </Button
+          </div>
+      </header
+      {/* Main C
+        {renderContent()}
+
+      <HotelDetails
+        isOpen={isDetailsOpen}
+        onBookRoom=
+
+        hotel={selectedHotel}
+        isOpen={is
+        checkIn={s
+
+
+    </div>
+}
+export default App;
+
+
+
+
+
+
+
+
+
+
+
                 </h2>
                 <span className="text-muted-foreground">
                   {filteredHotels.length} {filteredHotels.length !== 1 ? t('hotelsFound') : t('hotelFound')}

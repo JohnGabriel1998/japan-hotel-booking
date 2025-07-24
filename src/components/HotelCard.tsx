@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Hotel, Review } from '../types/hotel';
 import { useKV } from '@github/spark/hooks';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface HotelCardProps {
   hotel: Hotel;
@@ -12,6 +13,7 @@ interface HotelCardProps {
 }
 
 export function HotelCard({ hotel, onViewDetails }: HotelCardProps) {
+  const { t } = useTranslation();
   const [favorites, setFavorites] = useKV<string[]>('favorite-hotels', []);
   const [reviews, setReviews] = useKV<Review[]>('hotel-reviews', []);
 
@@ -116,7 +118,7 @@ export function HotelCard({ hotel, onViewDetails }: HotelCardProps) {
             <div className="text-2xl font-bold text-foreground">
               {formatPrice(hotel.priceRange.min)}
             </div>
-            <div className="text-sm text-muted-foreground">per night</div>
+            <div className="text-sm text-muted-foreground">{t('perNight')}</div>
           </div>
           <Button 
             className="bg-primary hover:bg-primary/90 text-primary-foreground"
@@ -125,7 +127,7 @@ export function HotelCard({ hotel, onViewDetails }: HotelCardProps) {
               onViewDetails(hotel);
             }}
           >
-            View Details
+            {t('viewDetails')}
           </Button>
         </div>
       </CardContent>

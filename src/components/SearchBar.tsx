@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { SearchFilters } from '../types/hotel';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface SearchBarProps {
   onSearch: (filters: SearchFilters) => void;
@@ -11,6 +12,7 @@ interface SearchBarProps {
 }
 
 export function SearchBar({ onSearch, filters }: SearchBarProps) {
+  const { t } = useTranslation();
   const [localFilters, setLocalFilters] = useState<SearchFilters>(filters);
 
   const handleSearch = () => {
@@ -27,14 +29,14 @@ export function SearchBar({ onSearch, filters }: SearchBarProps) {
         <div className="space-y-2">
           <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
             <MapPin size={16} />
-            Destination
+            {t('location')}
           </label>
           <select
             value={localFilters.location}
             onChange={(e) => setLocalFilters(prev => ({ ...prev, location: e.target.value }))}
             className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           >
-            <option value="">Select destination</option>
+            <option value="">{t('searchPlaceholder')}</option>
             {locations.map(location => (
               <option key={location} value={location}>{location}</option>
             ))}
@@ -44,7 +46,7 @@ export function SearchBar({ onSearch, filters }: SearchBarProps) {
         <div className="space-y-2">
           <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
             <Calendar size={16} />
-            Check-in
+            {t('checkIn')}
           </label>
           <Input
             type="date"
@@ -58,7 +60,7 @@ export function SearchBar({ onSearch, filters }: SearchBarProps) {
         <div className="space-y-2">
           <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
             <Calendar size={16} />
-            Check-out
+            {t('checkOut')}
           </label>
           <Input
             type="date"
@@ -72,7 +74,7 @@ export function SearchBar({ onSearch, filters }: SearchBarProps) {
         <div className="space-y-2">
           <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
             <Users size={16} />
-            Guests
+            {t('guests')}
           </label>
           <select
             value={localFilters.guests}
@@ -80,7 +82,7 @@ export function SearchBar({ onSearch, filters }: SearchBarProps) {
             className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           >
             {[1, 2, 3, 4, 5, 6].map(num => (
-              <option key={num} value={num}>{num} Guest{num > 1 ? 's' : ''}</option>
+              <option key={num} value={num}>{num} {t('guests')}</option>
             ))}
           </select>
         </div>
@@ -93,7 +95,7 @@ export function SearchBar({ onSearch, filters }: SearchBarProps) {
           size="lg"
         >
           <MagnifyingGlass size={18} className="mr-2" />
-          Search Hotels
+          {t('searchButton')}
         </Button>
       </div>
     </Card>

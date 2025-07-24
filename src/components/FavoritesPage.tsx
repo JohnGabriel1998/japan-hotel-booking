@@ -5,12 +5,14 @@ import { Button } from '@/components/ui/button';
 import { useKV } from '@github/spark/hooks';
 import { Hotel } from '../types/hotel';
 import { mockHotels } from '../data/hotels';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface FavoritesPageProps {
   onViewHotel: (hotel: Hotel) => void;
 }
 
 export function FavoritesPage({ onViewHotel }: FavoritesPageProps) {
+  const { t } = useTranslation();
   const [favorites] = useKV<string[]>('favorite-hotels', []);
 
   const favoriteHotels = mockHotels.filter(hotel => favorites.includes(hotel.id));
@@ -28,9 +30,9 @@ export function FavoritesPage({ onViewHotel }: FavoritesPageProps) {
       <div className="max-w-6xl mx-auto px-4 py-12">
         <div className="text-center">
           <Heart size={64} className="text-muted-foreground mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-2">No Favorites Yet</h2>
+          <h2 className="text-2xl font-bold mb-2">{t('noFavoritesTitle')}</h2>
           <p className="text-muted-foreground mb-8">
-            Start exploring hotels and add them to your favorites to see them here.
+            {t('noFavoritesSubtitle')}
           </p>
         </div>
       </div>
@@ -40,9 +42,9 @@ export function FavoritesPage({ onViewHotel }: FavoritesPageProps) {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Your Favorite Hotels</h1>
+        <h1 className="text-3xl font-bold mb-2">{t('yourFavoriteHotels')}</h1>
         <p className="text-muted-foreground">
-          {favoriteHotels.length} hotel{favoriteHotels.length > 1 ? 's' : ''} saved
+          {favoriteHotels.length} {favoriteHotels.length > 1 ? t('hotelsSaved') : t('hotelSaved')}
         </p>
       </div>
 
@@ -79,13 +81,13 @@ export function FavoritesPage({ onViewHotel }: FavoritesPageProps) {
                   <div className="text-lg font-bold text-primary">
                     {formatPrice(hotel.priceRange.min)}
                   </div>
-                  <div className="text-sm text-muted-foreground">per night</div>
+                  <div className="text-sm text-muted-foreground">{t('perNight')}</div>
                 </div>
                 <Button 
                   onClick={() => onViewHotel(hotel)}
                   className="bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
-                  View Hotel
+                  {t('viewDetails')}
                 </Button>
               </div>
             </CardContent>

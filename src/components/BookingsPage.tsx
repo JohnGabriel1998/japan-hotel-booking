@@ -4,8 +4,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useKV } from '@github/spark/hooks';
 import { Booking } from '../types/hotel';
+import { useTranslation } from '../hooks/useTranslation';
 
 export function BookingsPage() {
+  const { t } = useTranslation();
   const [bookings] = useKV<Booking[]>('user-bookings', []);
 
   const formatPrice = (price: number) => {
@@ -43,9 +45,9 @@ export function BookingsPage() {
       <div className="max-w-6xl mx-auto px-4 py-12">
         <div className="text-center">
           <Receipt size={64} className="text-muted-foreground mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-2">No Bookings Yet</h2>
+          <h2 className="text-2xl font-bold mb-2">{t('noBookingsTitle')}</h2>
           <p className="text-muted-foreground mb-8">
-            Your booking history will appear here once you make your first reservation.
+            {t('noBookingsSubtitle')}
           </p>
         </div>
       </div>
@@ -55,9 +57,9 @@ export function BookingsPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Your Bookings</h1>
+        <h1 className="text-3xl font-bold mb-2">{t('yourBookings')}</h1>
         <p className="text-muted-foreground">
-          {bookings.length} booking{bookings.length > 1 ? 's' : ''} found
+          {bookings.length} {bookings.length > 1 ? t('bookingsFound') : t('bookingFound')}
         </p>
       </div>
 
@@ -72,7 +74,7 @@ export function BookingsPage() {
                 </div>
                 <Badge className={`${getStatusColor(booking.status)} border-0`}>
                   <CheckCircle size={14} className="mr-1" />
-                  {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                  {booking.status === 'confirmed' ? t('bookingConfirmed') : booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
                 </Badge>
               </div>
 
@@ -80,7 +82,7 @@ export function BookingsPage() {
                 <div className="flex items-start gap-3">
                   <CalendarDots size={20} className="text-muted-foreground mt-1" />
                   <div>
-                    <div className="font-medium text-sm">Check-in</div>
+                    <div className="font-medium text-sm">{t('checkIn')}</div>
                     <div className="text-sm text-muted-foreground">
                       {formatDate(booking.checkIn)}
                     </div>
@@ -90,7 +92,7 @@ export function BookingsPage() {
                 <div className="flex items-start gap-3">
                   <CalendarDots size={20} className="text-muted-foreground mt-1" />
                   <div>
-                    <div className="font-medium text-sm">Check-out</div>
+                    <div className="font-medium text-sm">{t('checkOut')}</div>
                     <div className="text-sm text-muted-foreground">
                       {formatDate(booking.checkOut)}
                     </div>
@@ -100,9 +102,9 @@ export function BookingsPage() {
                 <div className="flex items-start gap-3">
                   <Users size={20} className="text-muted-foreground mt-1" />
                   <div>
-                    <div className="font-medium text-sm">Guests</div>
+                    <div className="font-medium text-sm">{t('guests')}</div>
                     <div className="text-sm text-muted-foreground">
-                      {booking.guests} guest{booking.guests > 1 ? 's' : ''}
+                      {booking.guests} {t('guests')}
                     </div>
                   </div>
                 </div>
@@ -110,7 +112,7 @@ export function BookingsPage() {
                 <div className="flex items-start gap-3">
                   <Receipt size={20} className="text-muted-foreground mt-1" />
                   <div>
-                    <div className="font-medium text-sm">Total</div>
+                    <div className="font-medium text-sm">{t('totalPaid')}</div>
                     <div className="text-lg font-bold text-primary">
                       {formatPrice(booking.totalPrice)}
                     </div>

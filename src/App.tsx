@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Heart, Receipt, MagnifyingGlass, House } from '@phosphor-icons/react';
+import { Heart, Receipt, MagnifyingGlass, House, Translate } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/sonner';
 import { SearchBar } from './components/SearchBar';
@@ -12,10 +12,12 @@ import { mockHotels } from './data/hotels';
 import { mockReviews } from './data/reviews';
 import { Hotel, Room, SearchFilters, Review } from './types/hotel';
 import { useKV } from '@github/spark/hooks';
+import { useTranslation } from './hooks/useTranslation';
 
 type Page = 'home' | 'favorites' | 'bookings';
 
 function App() {
+  const { t, currentLanguage, toggleLanguage } = useTranslation();
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [selectedHotel, setSelectedHotel] = useState<Hotel | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
@@ -86,9 +88,9 @@ function App() {
   };
 
   const navigation = [
-    { id: 'home', label: 'Hotels', icon: House },
-    { id: 'favorites', label: 'Favorites', icon: Heart },
-    { id: 'bookings', label: 'Bookings', icon: Receipt }
+    { id: 'home', label: t('hotels'), icon: House },
+    { id: 'favorites', label: t('favorites'), icon: Heart },
+    { id: 'bookings', label: t('bookings'), icon: Receipt }
   ];
 
   const renderContent = () => {
@@ -102,10 +104,10 @@ function App() {
           <div className="max-w-6xl mx-auto px-4 py-8">
             <div className="text-center mb-12">
               <h1 className="text-4xl font-bold text-foreground mb-4">
-                Discover Premium Hotels in Japan
+                {t('heroTitle')}
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Experience authentic Japanese hospitality at carefully curated luxury accommodations
+                {t('heroSubtitle')}
               </p>
             </div>
 
@@ -123,10 +125,10 @@ function App() {
             <div className="mb-6">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-semibold">
-                  {searchFilters?.location ? `Hotels in ${searchFilters.location}` : 'Featured Hotels'}
+                  {searchFilters?.location ? `${t('hotels')} in ${searchFilters.location}` : t('featuredHotels')}
                 </h2>
                 <span className="text-muted-foreground">
-                  {filteredHotels.length} hotel{filteredHotels.length !== 1 ? 's' : ''} found
+                  {filteredHotels.length} {filteredHotels.length !== 1 ? t('hotelsFound') : t('hotelFound')}
                 </span>
               </div>
             </div>
@@ -134,9 +136,9 @@ function App() {
             {filteredHotels.length === 0 ? (
               <div className="text-center py-12">
                 <MagnifyingGlass size={64} className="text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">No hotels found</h3>
+                <h3 className="text-xl font-semibold mb-2">{t('noHotelsTitle')}</h3>
                 <p className="text-muted-foreground">
-                  Try adjusting your search criteria or explore different destinations.
+                  {t('noHotelsSubtitle')}
                 </p>
               </div>
             ) : (
@@ -165,7 +167,7 @@ function App() {
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-sm">S</span>
               </div>
-              <h1 className="text-xl font-bold text-foreground">Sakura Stay</h1>
+              <h1 className="text-xl font-bold text-foreground">{t('appName')}</h1>
             </div>
 
             <nav className="flex items-center gap-2">
@@ -183,6 +185,18 @@ function App() {
                   </Button>
                 );
               })}
+              
+              <Button
+                variant="ghost"
+                onClick={toggleLanguage}
+                className="flex items-center gap-2 ml-2"
+                title={t('language')}
+              >
+                <Translate size={18} />
+                <span className="hidden sm:inline">
+                  {currentLanguage === 'en' ? t('japanese') : t('english')}
+                </span>
+              </Button>
             </nav>
           </div>
         </div>

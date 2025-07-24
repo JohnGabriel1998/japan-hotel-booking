@@ -1,7 +1,7 @@
 export const translations = {
   en: {
     // Header
-    appName: "Sakura Stay",
+    appName: "Japan Travelling Agency",
     hotels: "Hotels",
     favorites: "Favorites", 
     bookings: "Bookings",
@@ -66,7 +66,7 @@ export const translations = {
   },
   ja: {
     // Header
-    appName: "桜ステイ",
+    appName: "日本旅行代理店",
     hotels: "ホテル",
     favorites: "お気に入り",
     bookings: "予約",

@@ -24,7 +24,7 @@ export function SearchBar({ filters, onFiltersChange }: SearchBarProps) {
   ];
 
   return (
-    <Card className="p-6 shadow-lg border-0 bg-white/95 backdrop-blur-sm">
+    <Card className="p-6 shadow-lg border-0 bg-card/95 backdrop-blur-sm">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
         <div className="space-y-2">
           <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">

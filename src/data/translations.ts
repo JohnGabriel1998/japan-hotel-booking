@@ -48,6 +48,11 @@ export const translations = {
     english: "English",
     japanese: "日本語",
     
+    // Theme
+    theme: "Theme",
+    lightMode: "Light",
+    darkMode: "Dark",
+    
     // Favorites page
     noFavoritesTitle: "No Favorites Yet",
     noFavoritesSubtitle: "Start exploring hotels and add them to your favorites to see them here.",
@@ -112,6 +117,11 @@ export const translations = {
     language: "言語",
     english: "English", 
     japanese: "日本語",
+    
+    // Theme
+    theme: "テーマ",
+    lightMode: "ライト",
+    darkMode: "ダーク",
     
     // Favorites page
     noFavoritesTitle: "まだお気に入りがありません",

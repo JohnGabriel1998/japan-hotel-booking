@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Heart, Receipt, MagnifyingGlass, House, Translate } from '@phosphor-icons/react';
+import { Heart, Receipt, MagnifyingGlass, House, Translate, Moon, Sun } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/sonner';
 import { SearchBar } from './components/SearchBar';
@@ -13,11 +13,13 @@ import { mockReviews } from './data/reviews';
 import { Hotel, Room, SearchFilters, Review } from './types/hotel';
 import { useKV } from '@github/spark/hooks';
 import { useTranslation } from './hooks/useTranslation';
+import { useTheme } from './hooks/useTheme';
 
 type Page = 'hotels' | 'favorites' | 'bookings';
 
 function App() {
   const { t, currentLanguage, toggleLanguage } = useTranslation();
+  const { theme, toggleTheme, isDark } = useTheme();
   const [currentPage, setCurrentPage] = useState<Page>('hotels');
   const [selectedHotel, setSelectedHotel] = useState<Hotel | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
@@ -147,7 +149,7 @@ function App() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-white/95 backdrop-blur-sm sticky top-0 z-40">
+      <header className="border-b bg-card/95 backdrop-blur-sm sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -182,6 +184,18 @@ function App() {
                 <Translate size={18} />
                 <span className="hidden sm:inline">
                   {currentLanguage === 'en' ? t('japanese') : t('english')}
+                </span>
+              </Button>
+              
+              <Button
+                variant="ghost"
+                onClick={toggleTheme}
+                className="flex items-center gap-2"
+                title={t('theme')}
+              >
+                {isDark ? <Sun size={18} /> : <Moon size={18} />}
+                <span className="hidden sm:inline">
+                  {isDark ? t('lightMode') : t('darkMode')}
                 </span>
               </Button>
             </nav>

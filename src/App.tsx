@@ -1,35 +1,34 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Heart, Receipt, MagnifyingGlass, House, Translate } from '@phosphor-icons/react';
-import { SearchBar } from './components/SearchBa
-import { HotelDetails } from './components/HotelD
+import { Button } from '@/components/ui/button';
+import { Toaster } from '@/components/ui/sonner';
 import { SearchBar } from './components/SearchBar';
 import { HotelCard } from './components/HotelCard';
 import { HotelDetails } from './components/HotelDetails';
 import { BookingModal } from './components/BookingModal';
 import { FavoritesPage } from './components/FavoritesPage';
 import { BookingsPage } from './components/BookingsPage';
-  const [currentPage, setCurrentPage] = use
+import { mockHotels } from './data/hotels';
 import { mockReviews } from './data/reviews';
 import { Hotel, Room, SearchFilters, Review } from './types/hotel';
 import { useKV } from '@github/spark/hooks';
+import { useTranslation } from './hooks/useTranslation';
+
+type Page = 'hotels' | 'favorites' | 'bookings';
+
+function App() {
+  const { t, currentLanguage, toggleLanguage } = useTranslation();
+  const [currentPage, setCurrentPage] = useState<Page>('hotels');
+  const [selectedHotel, setSelectedHotel] = useState<Hotel | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [searchFilters, setSearchFilters] = useState<SearchFilters>({
+    location: '',
     checkIn: '',
-
-    amenities: []
-
-
-  useEffect(() => {
-      setReviews(mockReviews);
-  }, [reviews, setReviews]);
-  const filteredHotels = useMemo(() => {
-    
-      if (searchFilters.location && !hotel.location.toLowerC
-  
-      if (searchFilters.guests > 0) {
-        if (!hasC
-    checkIn: '',
-      if (hotelMi
-      }
-      return true;
+    checkOut: '',
+    guests: 2,
+    priceRange: [20000, 200000],
     amenities: []
   });
 
@@ -62,96 +61,84 @@ import { useKV } from '@github/spark/hooks';
       
       return true;
     });
-                </h2>
+  }, [searchFilters]);
 
-              </div>
+  const handleViewDetails = (hotel: Hotel) => {
+    setSelectedHotel(hotel);
+    setIsDetailsOpen(true);
+  };
 
-              <div classNam
-    
+  const handleBookRoom = (room: Room) => {
+    setSelectedRoom(room);
+    setIsBookingOpen(true);
+  };
 
-              </div>
-              <div className
-                  <HotelCar
-    
+  const handleCloseBooking = () => {
+    setIsBookingOpen(false);
+    setSelectedRoom(null);
+  };
 
-              </div>
-          </div>
-    }
+  const navigation = [
+    { id: 'hotels', label: t('hotels'), icon: House },
+    { id: 'favorites', label: t('favorites'), icon: Heart },
+    { id: 'bookings', label: t('bookings'), icon: Receipt }
+  ];
 
-    <div className="min-h-s
-    
-
-              <div className="w-8 h-
-              </div>
+  const renderContent = () => {
+    switch (currentPage) {
+      case 'favorites':
+        return <FavoritesPage onViewDetails={handleViewDetails} />;
+      case 'bookings':
+        return <BookingsPage />;
+      default:
+        return (
+          <div className="max-w-6xl mx-auto px-4 py-8">
+            {/* Hero Section */}
+            <div className="text-center mb-12">
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+                {t('heroTitle')}
+              </h1>
+              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+                {t('heroSubtitle')}
+              </p>
+              
+              <SearchBar 
+                filters={searchFilters}
+                onFiltersChange={setSearchFilters}
+              />
             </div>
-            <nav className
-    
 
-                    va
-                    className="flex items-center gap
-                    <Icon size={18} />
-                  </Button>
-    
-
-                onClick={toggle
-                title={t('
-                <Transl
-                  {currentLanguage === 'en' ? t('japanese') : t('
-              </Button
-          </div>
-      </header
-      {/* Main C
-        {renderContent()}
-
-      <HotelDetails
-        isOpen={isDetailsOpen}
-        onBookRoom=
-
-        hotel={selectedHotel}
-        isOpen={is
-        checkIn={s
-
-
-    </div>
-}
-export default App;
-
-
-
-
-
-
-
-
-
-
-
+            {/* Hotels Section */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-foreground">
+                  {t('featuredHotels')}
                 </h2>
                 <span className="text-muted-foreground">
                   {filteredHotels.length} {filteredHotels.length !== 1 ? t('hotelsFound') : t('hotelFound')}
                 </span>
               </div>
-            </div>
 
-            {filteredHotels.length === 0 ? (
-              <div className="text-center py-12">
-                <MagnifyingGlass size={64} className="text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">{t('noHotelsTitle')}</h3>
-                <p className="text-muted-foreground">
-                  {t('noHotelsSubtitle')}
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredHotels.map((hotel) => (
-                  <HotelCard
-                    key={hotel.id}
-                    hotel={hotel}
-                    onViewDetails={handleViewDetails}
-                  />
-                ))}
-              </div>
-            )}
+              {filteredHotels.length === 0 ? (
+                <div className="text-center py-12">
+                  <MagnifyingGlass size={64} className="text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">{t('noHotelsTitle')}</h3>
+                  <p className="text-muted-foreground">
+                    {t('noHotelsSubtitle')}
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredHotels.map((hotel) => (
+                    <HotelCard
+                      key={hotel.id}
+                      hotel={hotel}
+                      onViewDetails={handleViewDetails}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         );
     }

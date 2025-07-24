@@ -7,16 +7,16 @@ import { SearchFilters } from '../types/hotel';
 import { useTranslation } from '../hooks/useTranslation';
 
 interface SearchBarProps {
-  onSearch: (filters: SearchFilters) => void;
   filters: SearchFilters;
+  onFiltersChange: (filters: SearchFilters) => void;
 }
 
-export function SearchBar({ onSearch, filters }: SearchBarProps) {
+export function SearchBar({ filters, onFiltersChange }: SearchBarProps) {
   const { t } = useTranslation();
   const [localFilters, setLocalFilters] = useState<SearchFilters>(filters);
 
   const handleSearch = () => {
-    onSearch(localFilters);
+    onFiltersChange(localFilters);
   };
 
   const locations = [

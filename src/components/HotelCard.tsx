@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Star, MapPin, Heart, Users } from '@phosphor-icons/react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Hotel } from '../types/hotel';
+import { Hotel, Review } from '../types/hotel';
 import { useKV } from '@github/spark/hooks';
 
 interface HotelCardProps {
@@ -13,8 +13,25 @@ interface HotelCardProps {
 
 export function HotelCard({ hotel, onViewDetails }: HotelCardProps) {
   const [favorites, setFavorites] = useKV<string[]>('favorite-hotels', []);
+  const [reviews, setReviews] = useKV<Review[]>('hotel-reviews', []);
 
   const isFavorite = favorites.includes(hotel.id);
+
+  // Calculate live review statistics
+  const reviewStats = useMemo(() => {
+    const hotelReviews = reviews.filter(review => review.hotelId === hotel.id);
+    if (hotelReviews.length === 0) {
+      return { rating: hotel.rating, count: hotel.reviewCount };
+    }
+    
+    const totalRating = hotelReviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalRating / hotelReviews.length;
+    
+    return {
+      rating: Number(averageRating.toFixed(1)),
+      count: hotelReviews.length
+    };
+  }, [reviews, hotel.id, hotel.rating, hotel.reviewCount]);
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -62,14 +79,19 @@ export function HotelCard({ hotel, onViewDetails }: HotelCardProps) {
           </h3>
           <div className="flex items-center gap-1 text-sm">
             <Star size={16} weight="fill" className="text-yellow-500" />
-            <span className="font-medium">{hotel.rating}</span>
-            <span className="text-muted-foreground">({hotel.reviewCount})</span>
+            <span className="font-medium">{reviewStats.rating}</span>
+            <span className="text-muted-foreground">({reviewStats.count})</span>
           </div>
         </div>
 
         <div className="flex items-center gap-1 text-muted-foreground mb-3">
           <MapPin size={16} />
           <span className="text-sm">{hotel.location}, {hotel.prefecture}</span>
+          {reviewStats.count > hotel.reviewCount && (
+            <Badge variant="outline" className="text-xs ml-2">
+              New Reviews
+            </Badge>
+          )}
         </div>
 
         <p className="text-sm text-muted-foreground mb-4 line-clamp-2">

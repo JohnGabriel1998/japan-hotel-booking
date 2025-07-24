@@ -55,3 +55,25 @@ export interface SearchFilters {
   priceRange: [number, number];
   amenities: string[];
 }
+
+export interface Review {
+  id: string;
+  hotelId: string;
+  userId: string;
+  userName: string;
+  userAvatar?: string;
+  rating: number;
+  title: string;
+  comment: string;
+  roomType?: string;
+  stayDate: string;
+  createdAt: string;
+  helpful: number;
+  categories: {
+    cleanliness: number;
+    service: number;
+    location: number;
+    value: number;
+    amenities: number;
+  };
+}

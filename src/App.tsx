@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Heart, Receipt, Search, Home } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/sonner';
@@ -9,7 +9,8 @@ import { BookingModal } from './components/BookingModal';
 import { FavoritesPage } from './components/FavoritesPage';
 import { BookingsPage } from './components/BookingsPage';
 import { mockHotels } from './data/hotels';
-import { Hotel, Room, SearchFilters } from './types/hotel';
+import { mockReviews } from './data/reviews';
+import { Hotel, Room, SearchFilters, Review } from './types/hotel';
 import { useKV } from '@github/spark/hooks';
 
 type Page = 'home' | 'favorites' | 'bookings';
@@ -29,6 +30,15 @@ function App() {
     priceRange: [0, 200000],
     amenities: []
   });
+
+  const [reviews, setReviews] = useKV<Review[]>('hotel-reviews', []);
+
+  // Initialize with mock reviews if none exist
+  useEffect(() => {
+    if (reviews.length === 0) {
+      setReviews(mockReviews);
+    }
+  }, [reviews.length, setReviews]);
 
   const filteredHotels = useMemo(() => {
     return mockHotels.filter(hotel => {
